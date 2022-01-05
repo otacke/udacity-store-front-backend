@@ -10,10 +10,11 @@ export abstract class ModelStoreBase<ModelType> {
 
   /**
    * Run database query.
-   * @param {string} sql SQL query to run.
-   * @param {any[]|null} params query parameters.
+   * @param {string|number|null} sql SQL query to run.
+   * @param {(string|number|undefined)[]} params Query parameters.
+   * @return {Promise<QueryResult<ModelType>>} Query result.
    */
-  protected async runQuery(sql: string, params: (string|number|null|undefined)[]|null): Promise<QueryResult<ModelType>> {
+  protected async runQuery(sql: string, params?: (string|number|undefined)[]): Promise<QueryResult<ModelType>> {
     try {
       const conn = await Client.connect();
       let result;
@@ -37,7 +38,7 @@ export abstract class ModelStoreBase<ModelType> {
    */
   async index(): Promise<ModelType[]> {
     try {
-      const result = await this.runQuery(`SELECT * FROM ${this.table}`, null);
+      const result = await this.runQuery(`SELECT * FROM ${this.table}`);
       return result.rows;
     }
     catch (error) {
@@ -91,7 +92,7 @@ export abstract class ModelStoreBase<ModelType> {
    */
   async deleteAll(): Promise<void> {
     try {
-      await this.runQuery(`DELETE FROM ${this.table}`, null);
+      await this.runQuery(`DELETE FROM ${this.table}`);
     }
     catch (error) {
       throw new Error(`Could not delete all entries in ${this.table}: ${error}`);
