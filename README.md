@@ -58,7 +58,8 @@ run db-migrate, run the tests and revert everything again and switch back to the
 3. Run `npm run start` to run the server.
 
 #### Using
-You can access the server on localhost on port 3000, so http://localhost:3000.
+The database will run on port 5432. You can access the server on localhost on
+port 3000 (unless you change it in in `.env`), so http://localhost:3000.
 It will give you nothing but a greeting message.
 
 From there you can start your journey ...
