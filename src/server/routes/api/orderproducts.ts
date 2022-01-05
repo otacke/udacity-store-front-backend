@@ -24,7 +24,7 @@ orderProducts.post(
   (req, res) => { orderProductHandler.create(req, res); });
 
 // Edit
-orderProducts.post(
+orderProducts.put(
   '/:id',
   authenticate, (req, res) => { orderProductHandler.edit(req, res); });
 

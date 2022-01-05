@@ -72,7 +72,7 @@ You will receive a JWT that is required for accessing most other routes.
 will list all users.
 - Show: [get] http://localhost:3000/api/users/:id while providing authorization
 will list the information for the user with the `id`.
-- Edit: [post] http://localhost:3000/api/users/:id while providing authorization
+- Edit: [put] http://localhost:3000/api/users/:id while providing authorization
 will edit the user with the `id` and set `user_name`, `first_name`, `last_name`
 and `password` as provided as parameters.
 - Delete: [delete] http://localhost:3000/api/users/:id while providing
@@ -86,7 +86,7 @@ products.
 - Create: [post] http://localhost:3000/api/products while providing
 authorization to create a product. Parameters are: `name`, `price` and
 `category`.
-- Edit: [post] http://localhost:3000/api/products/:id while providing
+- Edit: [put] http://localhost:3000/api/products/:id while providing
 authorization to edit a product with `id`. Parameters are: `name`, `price` and
 `category`.
 - Delete: [delete] http://localhost:3000/api/products/:id while providing
@@ -99,7 +99,7 @@ to get a list of all orders.
 authorization to get a list of all orders from user `user_id`.
 - Create: [post] http://localhost:3000/api/orders while providing
 authorization to create an order. Parameters are: `user_id` and `status`.
-- Edit: [post] http://localhost:3000/api/orders/:id while providing
+- Edit: [put] http://localhost:3000/api/orders/:id while providing
 authorization to edit an order with `id`. Parameters are: `user_id` and
 `status`.
 - Delete: [delete] http://localhost:3000/api/orders/:id while providing
@@ -113,7 +113,7 @@ authorization to get order/product combination with `id`.
 - Create: [post] http://localhost:3000/api/orderproducts while providing
 authorization to add a product with parameter `product_id` to order with
 `order_id` in quantity of parameter `quantity`.
-- Edit: [post] http://localhost:3000/api/orderproducts/:id while providing
+- Edit: [put] http://localhost:3000/api/orderproducts/:id while providing
 authorization to edit a product/order combination with `id`. Parameters are
 `product_id`, `order_id` and `quantity`.
 - Delete: [delete] http://localhost:3000/api/orderproducts/:id while providing

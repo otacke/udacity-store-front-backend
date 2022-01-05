@@ -26,7 +26,7 @@ users.post(
 );
 
 // Edit
-users.post(
+users.put(
   '/:id',
   authenticate,
   (req, res) => { userHandler.edit(req, res); }

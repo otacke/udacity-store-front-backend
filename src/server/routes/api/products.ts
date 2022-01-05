@@ -25,7 +25,7 @@ products.post(
 );
 
 // Edit
-products.post(
+products.put(
   '/:id',
   authenticate,
   (req, res) => { productHandler.edit(req, res); });

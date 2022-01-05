@@ -27,7 +27,7 @@ orders.post(
 );
 
 // Edit
-orders.post(
+orders.put(
   '/:id',
   authenticate,
   (req, res) => { orderHandler.edit(req, res); }
