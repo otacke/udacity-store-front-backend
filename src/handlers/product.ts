@@ -39,7 +39,7 @@ export default class ProductHandler extends HandlerBase<Product, ProductStore> {
     try {
       await this.handleRequest(false, req, res, async (req: Request): Promise<Product> => {
         return await this.store.edit({
-          id: req.body.id,
+          id: parseInt(req.params.id),
           name: req.body.name,
           price: req.body.price,
           category: req.body.category ?? ''

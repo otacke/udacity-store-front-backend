@@ -10,7 +10,8 @@ const request = supertest(server.app);
 describe('Test responses from product endpoints', () => {
   let user: User;
   let token: string;
-  let product: Product;
+  let product1: Product;
+  let product2: Product;
 
   beforeAll(async () => {
     const response = await request
@@ -32,7 +33,7 @@ describe('Test responses from product endpoints', () => {
   });
 
   it('posts to /api/products (valid params) and creates a product', async () => {
-    const response = await request
+    let response = await request
       .post('/api/products')
       .send({
         name: 'Minecraft',
@@ -40,16 +41,30 @@ describe('Test responses from product endpoints', () => {
         category: 'game'
       })
       .set('Authorization', token);
-    product = response.body as Product;
+    product1 = response.body as Product;
 
-    expect(product.name).toEqual('Minecraft');
-    expect(product.price).toEqual(20);
-    expect(product.category).toEqual('game');
+    expect(product1.name).toEqual('Minecraft');
+    expect(product1.price).toEqual(20);
+    expect(product1.category).toEqual('game');
+
+    response = await request
+      .post('/api/products')
+      .send({
+        name: 'Udacity coding course',
+        price: 99,
+        category: 'education'
+      })
+      .set('Authorization', token);
+    product2 = response.body as Product;
+
+    expect(product2.name).toEqual('Udacity coding course');
+    expect(product2.price).toEqual(99);
+    expect(product2.category).toEqual('education');
   });
 
   it('gets from /api/products/:product_id (valid id) the product', async () => {
     const response = await request
-      .get(`/api/products/${product.id}`)
+      .get(`/api/products/${product1.id}`)
       .set('Authorization', token);
 
     expect(response.body.name).toEqual('Minecraft');
@@ -59,19 +74,42 @@ describe('Test responses from product endpoints', () => {
 
   it('gets from /api/products all of the products', async () => {
     const response = await request
-      .get('/api/products')
-      .set('Authorization', token);
+      .get('/api/products');
 
+    expect(response.body.length).toEqual(2);
     expect(response.body[0].name).toEqual('Minecraft');
     expect(response.body[0].price).toEqual(20);
     expect(response.body[0].category).toEqual('game');
+    expect(response.body[1].name).toEqual('Udacity coding course');
+    expect(response.body[1].price).toEqual(99);
+    expect(response.body[1].category).toEqual('education');
+  });
+
+  it('puts to /api/products/:product_id (valid id) to change parameters', async () => {
+    const response = await request
+      .put(`/api/products/${product2.id}`)
+      .set('Authorization', token)
+      .send({
+        name: 'Candy',
+        price: 1,
+        category: 'food'
+      });
+
+    expect(response.body.name).toEqual('Candy');
+    expect(response.body.price).toEqual(1);
+    expect(response.body.category).toEqual('food');
   });
 
   // Clean up
   afterAll(async () => {
     await request
       .delete('/products')
-      .send({ id: product.id })
+      .send({ id: product1.id })
+      .set('Authorization', token);
+
+    await request
+      .delete('/products')
+      .send({ id: product2.id })
       .set('Authorization', token);
 
     await request

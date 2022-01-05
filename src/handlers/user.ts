@@ -40,7 +40,7 @@ export default class UserHandler extends HandlerBase<User, UserStore> {
     try {
       await this.handleRequest(false, req, res, async (req: Request): Promise<User> => {
         return await this.store.edit({
-          id: req.body.id,
+          id: parseInt(req.params.id),
           user_name: req.body.user_name,
           first_name: req.body.first_name,
           last_name: req.body.last_name,
