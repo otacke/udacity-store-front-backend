@@ -1,4 +1,5 @@
 import { ModelStoreBase } from './modelBase';
+import { QueryResult } from 'pg';
 import bcrypt from 'bcrypt';
 
 export type User = {
@@ -10,8 +11,8 @@ export type User = {
 }
 
 export class UserStore extends ModelStoreBase<User> {
-  private saltRounds = parseInt(process.env.SALT_ROUNDS as unknown as string);
-  private pepper = process.env.BCRYPT_PASSWORD as unknown as string;
+  private saltRounds: number = parseInt(process.env.SALT_ROUNDS as unknown as string);
+  private pepper: string = process.env.BCRYPT_PASSWORD as unknown as string;
 
   /**
    * @constructor
@@ -32,7 +33,7 @@ export class UserStore extends ModelStoreBase<User> {
   async create(user: User): Promise<User> {
     const hash = bcrypt.hashSync(user.password + this.pepper, this.saltRounds);
     try {
-      const result = await this.runQuery(`INSERT INTO ${this.table} (user_name, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *`, [user.user_name, user.first_name, user.last_name, hash]);
+      const result: QueryResult = await this.runQuery(`INSERT INTO ${this.table} (user_name, first_name, last_name, password) VALUES($1, $2, $3, $4) RETURNING *`, [user.user_name, user.first_name, user.last_name, hash]);
       return result.rows[0];
     }
     catch (error) {
@@ -54,7 +55,7 @@ export class UserStore extends ModelStoreBase<User> {
     const hash = bcrypt.hashSync(`${user.password}${this.pepper}`, this.saltRounds);
 
     try {
-      const result = await this.runQuery(`UPDATE ${this.table} SET user_name = $2, first_name = $3, last_name = $4, password = $5 WHERE id=$1 RETURNING *`, [user.id, user.user_name, user.first_name, user.last_name, hash]);
+      const result: QueryResult = await this.runQuery(`UPDATE ${this.table} SET user_name = $2, first_name = $3, last_name = $4, password = $5 WHERE id=$1 RETURNING *`, [user.id, user.user_name, user.first_name, user.last_name, hash]);
       return result.rows[0];
     }
     catch (error) {
@@ -69,12 +70,12 @@ export class UserStore extends ModelStoreBase<User> {
    * @return {User|null} User object if authenticated, else null.
    */
   async authenticate(user_name: string, password: string): Promise<User|null> {
-    let result;
+    let result: QueryResult|null;
     try {
       result = await this.runQuery(`SELECT * FROM ${this.table} WHERE user_name=($1)`, [user_name]);
     }
     catch (error) {
-      result = {};
+      result = null;
       throw new Error(`Could not run show query on ${this.table}: ${error}`);
     }
 

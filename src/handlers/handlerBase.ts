@@ -22,7 +22,7 @@ export abstract class HandlerBase<ModelType, ModelStoreType extends ModelStoreBa
      */
     protected async handleRequest(useJWT: boolean, req: Request, res: Response, storeHandler: (req: Request) => Promise<ModelType|ModelType[]|null>): Promise<void> {
       try {
-        const result = await storeHandler(req) as unknown as string;
+        const result: string = await storeHandler(req) as unknown as string;
         if (useJWT) {
           res.json(jwt.sign(result, process.env.TOKEN_SECRET as unknown as string));
         } else {

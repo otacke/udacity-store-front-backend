@@ -17,7 +17,7 @@ export abstract class ModelStoreBase<ModelType> {
   protected async runQuery(sql: string, params?: (string|number|undefined)[]): Promise<QueryResult<ModelType>> {
     try {
       const conn = await Client.connect();
-      let result;
+      let result: QueryResult<ModelType>;
       if (params) {
         result = await conn.query(sql, params);
       }
@@ -38,7 +38,7 @@ export abstract class ModelStoreBase<ModelType> {
    */
   async index(): Promise<ModelType[]> {
     try {
-      const result = await this.runQuery(`SELECT * FROM ${this.table}`);
+      const result: QueryResult<ModelType> = await this.runQuery(`SELECT * FROM ${this.table}`);
       return result.rows;
     }
     catch (error) {
@@ -53,7 +53,7 @@ export abstract class ModelStoreBase<ModelType> {
    */
   async show(id: string): Promise<ModelType|ModelType[]> {
     try {
-      const result = await this.runQuery(`SELECT * FROM ${this.table} WHERE id=($1)`, [id]);
+      const result: QueryResult<ModelType> = await this.runQuery(`SELECT * FROM ${this.table} WHERE id=($1)`, [id]);
       return result.rows[0];
     }
     catch (error) {
@@ -79,7 +79,7 @@ export abstract class ModelStoreBase<ModelType> {
 
   async delete(id: string): Promise<ModelType> {
     try {
-      const result = await this.runQuery(`DELETE FROM ${this.table} WHERE id=($1)`, [id]);
+      const result: QueryResult<ModelType> = await this.runQuery(`DELETE FROM ${this.table} WHERE id=($1)`, [id]);
       return result.rows[0];
     }
     catch (error) {

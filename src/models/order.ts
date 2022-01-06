@@ -1,4 +1,5 @@
 import { ModelStoreBase } from './modelBase';
+import { QueryResult } from 'pg';
 
 export type Order = {
     id?: number;
@@ -22,7 +23,7 @@ export class OrderStore extends ModelStoreBase<Order> {
   async show(id: string): Promise<Order[]> {
     try {
       id = `${id}`;
-      const result = await this.runQuery(`SELECT * FROM ${this.table} WHERE user_id=($1) AND status<>($2)`, [id, 'complete']);
+      const result: QueryResult = await this.runQuery(`SELECT * FROM ${this.table} WHERE user_id=($1) AND status<>($2)`, [id, 'complete']);
       return result.rows;
     }
     catch (error) {
@@ -39,7 +40,7 @@ export class OrderStore extends ModelStoreBase<Order> {
    */
   async create(order: Order): Promise<Order> {
     try {
-      const result = await this.runQuery(`INSERT INTO ${this.table} (user_id, status) VALUES($1, $2) RETURNING *`, [order.user_id, order.status]);
+      const result: QueryResult = await this.runQuery(`INSERT INTO ${this.table} (user_id, status) VALUES($1, $2) RETURNING *`, [order.user_id, order.status]);
       return result.rows[0];
     }
     catch (error) {
@@ -57,7 +58,7 @@ export class OrderStore extends ModelStoreBase<Order> {
    */
   async edit(order: Order): Promise<Order> {
     try {
-      const result = await this.runQuery(`UPDATE ${this.table} SET user_id = $2, status = $3 WHERE id=$1 RETURNING *`, [order.id, order.user_id, order.status]);
+      const result: QueryResult = await this.runQuery(`UPDATE ${this.table} SET user_id = $2, status = $3 WHERE id=$1 RETURNING *`, [order.id, order.user_id, order.status]);
       return result.rows[0];
     }
     catch (error) {
